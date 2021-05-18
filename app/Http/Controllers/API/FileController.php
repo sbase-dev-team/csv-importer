@@ -6,10 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\CustomField;
 use App\Models\Product;
 use App\Models\ProductField;
-use Exception;
 use Illuminate\Http\Request;
-use Illuminate\Support\Collection;
-use Symfony\Contracts\Service\Attribute\Required;
 
 /**
  * Created by PhpStorm.
@@ -20,6 +17,10 @@ use Symfony\Contracts\Service\Attribute\Required;
 
 class FileController extends Controller
 {
+    /**
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function parseFile(Request $request)
     {
         $path = $request->file('file')->getRealPath();
@@ -69,11 +70,7 @@ class FileController extends Controller
         foreach ($csvData as $key => $item) {
             if ($key === 0) continue; //skip csv headers
             $row = array_combine($fields, $item);
-            try {
-                $product = Product::create($row);
-            } catch (Exception $e) {
-                dd($row);
-            }
+            $product = Product::create($row);
             foreach ($customFields as $field) {
                 if (!$field->id) dd($field);
                 ProductField::create([
@@ -119,7 +116,6 @@ class FileController extends Controller
 
                 }
                 $toReturn[] = $row;
-
             }
             fclose($handle);
         }
