@@ -72,7 +72,6 @@ class FileController extends Controller
             $row = array_combine($fields, $item);
             $product = Product::create($row);
             foreach ($customFields as $field) {
-                if (!$field->id) dd($field);
                 ProductField::create([
                     'field_id' => $field->id,
                     'product_id' => $product->id,
